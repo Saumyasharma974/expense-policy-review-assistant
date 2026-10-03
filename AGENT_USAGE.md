@@ -30,3 +30,10 @@
 - Verified AI fallback boundaries and handled unsupported models securely via a real API test on Groq.
 - Validated that the root package commands perfectly cascade typechecks and test commands to workspaces.
 - Documented production-ready deployment strategies for full-stack architecture.
+
+## Phase 6: Production Deployment & Bug Fixes
+- Deployed database to Neon serverless Postgres.
+- Deployed Express API to Render.
+- Deployed React frontend to Vercel, solving complex monorepo workspace resolution by injecting a custom workspace compilation command into the frontend `package.json`.
+- Debugged and fixed a strict CORS mismatch in production caused by trailing slashes on environment variables.
+- Debugged and fixed a CSS `sticky` positioning bug on the dashboard causing the Review History to overlap with the Action Panel during scroll.

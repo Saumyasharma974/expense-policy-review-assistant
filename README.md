@@ -78,14 +78,23 @@ npm test
 
 ## Production Deployment
 
-### Recommended Architecture
-- **Frontend (Vite/React):** Vercel or Netlify.
-- **Backend (Express Node.js):** Render or Railway.
-- **Database (PostgreSQL):** Supabase, Neon, or Render PostgreSQL.
-- **AI Inference:** Groq API.
+### Current Architecture
+- **Frontend (Vite/React):** Vercel
+- **Backend (Express Node.js):** Render
+- **Database (PostgreSQL):** Neon
+- **AI Inference:** Groq API
 
 ### Deployment Steps
-1. **Database:** Deploy your managed PostgreSQL instance. Note the connection URL.
-2. **Backend:** Connect your repository to Render. Set the Build Command to `npm install && npm run build -w backend` and the Start Command to `npm start -w backend`. Set the Environment Variables (`DATABASE_URL`, `FRONTEND_URL`, `GROQ_API_KEY`, `GROQ_MODEL`).
-3. **Database Migrations:** Run migrations against the production database: `npx prisma migrate deploy` (do **not** run seed in production).
-4. **Frontend:** Connect your repository to Vercel. Set the Root Directory to `frontend`. Set the Build Command to `npm run build` and the Install Command to `npm install`. Set the Environment Variable `VITE_API_URL` to your Render backend URL.
+1. **Database:** Deployed managed PostgreSQL instance on Neon. Ensure connection strings use `sslmode=require`.
+2. **Backend (Render):**
+   - Connect repository to Render as a Web Service.
+   - **Build Command:** `npm install && npm run build -w shared && npm run build -w backend`
+   - **Start Command:** `npm start -w backend`
+   - **Environment Variables:** Set `DATABASE_URL`, `FRONTEND_URL` (no trailing slash), `GROQ_API_KEY`, `GROQ_MODEL`.
+   - **Database Migrations:** Run `npx prisma migrate deploy` locally against the Neon DB, or in the Render build command before start.
+3. **Frontend (Vercel):**
+   - Connect repository to Vercel.
+   - **Framework Preset:** `Vite`
+   - **Root Directory:** `frontend`
+   - *(Note: The custom build script in `frontend/package.json` automatically handles compiling the `shared` workspace before building the Vite app).*
+   - **Environment Variable:** Set `VITE_API_URL` to your Render backend URL (e.g., `https://my-backend.onrender.com/api`).
