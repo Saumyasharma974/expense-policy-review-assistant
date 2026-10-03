@@ -97,6 +97,11 @@ app.get('/api/claims/:id', async (req: Request, res: Response) => {
       res.status(404).json({ status: 'error', message: 'Claim not found' });
       return;
     }
+    
+    // Evaluate deterministic validation on the fly to reflect latest rules (e.g. date age)
+    const validationResult = await validateClaim(claim.id);
+    (claim as any).deterministic = validationResult.findings;
+
     res.json(claim);
   } catch (error) {
     logger.error({ err: error, claimId: req.params.id }, 'Failed to fetch claim');

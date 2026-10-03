@@ -107,7 +107,7 @@ export default function ClaimReview() {
                 disabled={analyzeMutation.isPending}
                 className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-50"
               >
-                {analyzeMutation.isPending ? 'Analyzing...' : (aiFinding ? 'Retry AI Analysis' : 'Analyze with AI')}
+                {analyzeMutation.isPending ? 'Analyzing...' : (analyzeMutation.isError ? 'Retry AI Analysis' : (aiFinding ? 'Re-analyze with AI' : 'Analyze with AI'))}
               </button>
             </div>
 
@@ -137,6 +137,12 @@ export default function ClaimReview() {
                     <span className="block text-sm text-gray-500 uppercase tracking-wide font-semibold mb-1">Compliance Status</span>
                     <span className="text-lg font-bold text-gray-800">{aiFinding.complianceStatus}</span>
                     {aiFinding.uncertainty && <span className="ml-2 text-xs bg-orange-200 text-orange-800 px-2 py-0.5 rounded-full font-bold">Uncertain</span>}
+                    {aiFinding.complianceStatus === 'NON_COMPLIANT' && claim.finalStatus === 'APPROVED' && (
+                      <div className="mt-3 text-sm text-blue-800 bg-blue-100 p-3 rounded border border-blue-200">
+                        <strong>Final Human Decision:</strong> APPROVED <br/>
+                        <span className="italic">Final decision was made by a human reviewer.</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
