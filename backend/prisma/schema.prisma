@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Employee {
+  id    String @id @default(uuid())
+  name  String
+  email String @unique
+}
+
+model PolicySection {
+  id      String @id // Stable identifier suitable for citations
+  title   String
+  content String
+}
+
+model ExpenseClaim {
+  id                          String   @id @default(uuid())
+  claimantId                  String
+  date                        DateTime
+  category                    String
+  amountMinorUnits            Int      // Integer minor units
+  currency                    String
+  description                 String
+  receiptAvailable            Boolean
+  finalStatus                 String   // PENDING, APPROVED, REJECTED, CLARIFICATION_REQUESTED
+  aiClassification            String?  // e.g. COMPLIANT, NON_COMPLIANT, UNCLEAR
+  aiConfidence                Int?     // 0-100
+  humanOverrideClassification String?
+  humanOverrideReason         String?
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+  
+  reviews          ReviewHistory[]
+  aiFindings       AiFinding[]
+  deterministic    DeterministicFinding[]
+}
+
+model ReviewHistory {
+  id          String   @id @default(uuid())
+  claimId     String
+  actorType   String   // AI | HUMAN | SYSTEM
+  actorId     String?
+  action      String
+  reason      String?
+  payload     Json?
+  createdAt   DateTime @default(now())
+  
+  claim       ExpenseClaim @relation(fields: [claimId], references: [id])
+}
+
+model AiFinding {
+  id                    String   @id @default(uuid())
+  claimId               String
+  policySectionId       String?
+  classification        String
+  confidence            Int
+  complianceStatus      String
+  explanation           String
+  uncertainty           Boolean  @default(false)
+  missingInformation    String[]
+  clarificationQuestion String?
+  policyEvidence        String?  // Exact evidence text
+  createdAt             DateTime @default(now())
+  
+  claim                 ExpenseClaim @relation(fields: [claimId], references: [id])
+}
+
+model DeterministicFinding {
+  id              String   @id @default(uuid())
+  claimId         String
+  code            String
+  severity        String   // ERROR, WARNING, INFO
+  message         String
+  field           String?
+  createdAt       DateTime @default(now())
+
+  claim           ExpenseClaim @relation(fields: [claimId], references: [id])
+}
