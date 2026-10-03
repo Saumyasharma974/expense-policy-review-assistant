@@ -2,7 +2,7 @@ services:
   - type: web
     name: expense-backend
     env: node
-    buildCommand: npm install && npm run build -w shared && npm run build -w backend && npm run prisma:generate -w backend
+    buildCommand: npm install && npm run build -w shared && npm run prisma:generate -w backend && npm run build -w backend
     startCommand: npm run prisma:migrate -w backend && npm start -w backend
     envVars:
       - key: NODE_VERSION

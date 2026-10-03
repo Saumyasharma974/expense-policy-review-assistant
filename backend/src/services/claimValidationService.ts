@@ -65,7 +65,7 @@ export async function validateClaim(claimId: string): Promise<ValidationResult> 
       }
     });
 
-    const candidateClaims: DuplicateCandidate[] = existingClaims.map(c => ({
+    const candidateClaims: DuplicateCandidate[] = existingClaims.map((c: any) => ({
       id: c.id,
       claimantId: c.claimantId,
       amountMinorUnits: c.amountMinorUnits,
