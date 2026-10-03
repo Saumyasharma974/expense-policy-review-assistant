@@ -1,5 +1,0 @@
-{
-  "buildCommand": "npm run build -w shared && npm run build -w frontend",
-  "outputDirectory": "frontend/dist",
-  "ignoreCommand": "bash -c 'exit 1'"
-}
