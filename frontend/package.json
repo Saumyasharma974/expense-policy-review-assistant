@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "cd .. && npm run build -w shared && cd frontend && tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
     "typecheck": "tsc -b",
