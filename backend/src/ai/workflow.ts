@@ -1,5 +1,5 @@
 import { StateGraph, START, END, Annotation } from '@langchain/langgraph';
-import { PrismaClient, PolicySection } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { getGroqModel } from './groq';
 import { ReviewGraphState } from './state';
 import { SYSTEM_CLASSIFY_PROMPT, SYSTEM_COMPLIANCE_PROMPT } from './prompts';
@@ -43,7 +43,7 @@ async function retrievePolicyCandidates(state: typeof GraphAnnotation.State) {
   const policies = await prisma.policySection.findMany();
   
   return {
-    policyCandidates: policies.map((p: PolicySection) => ({
+    policyCandidates: policies.map((p: { id: string; title: string; content: string }) => ({
       id: p.id,
       category: p.title, // map title to category
       content: p.content
