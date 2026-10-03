@@ -15,7 +15,8 @@ const app = express();
 const port = process.env.PORT || 3000;
 const prisma = new PrismaClient();
 
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173' }));
+const frontendUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, '') : 'http://localhost:5173';
+app.use(cors({ origin: frontendUrl }));
 app.use(express.json());
 app.use(pinoHttp({ logger }));
 
