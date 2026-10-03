@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: expense-backend
+    env: node
+    buildCommand: npm install && npm run build -w shared && npm run build -w backend && npm run prisma:generate -w backend
+    startCommand: npm run prisma:migrate -w backend && npm start -w backend
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: expense-db
+          property: connectionString
+      - key: FRONTEND_URL
+        value: https://expense-frontend.onrender.com # Change this if your frontend URL is different
+      - key: GROQ_API_KEY
+        sync: false # You must set this manually in the Render dashboard
+      - key: GROQ_MODEL
+        value: openai/gpt-oss-20b
+
+  - type: web
+    name: expense-frontend
+    env: static
+    buildCommand: npm install && npm run build -w shared && npm run build -w frontend
+    staticPublishPath: ./frontend/dist
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: VITE_API_URL
+        value: https://expense-backend.onrender.com/api # Matches the backend name by default
+
+databases:
+  - name: expense-db
+    plan: free
+    postgresMajorVersion: 16
